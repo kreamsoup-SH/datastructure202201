@@ -1,9 +1,8 @@
 # datastructure202201
    
    
-> 각 역을 노드화(?)해서 NodeList에 넣었어요   
-> 역명으로 노드 찾아내기 구현 성공했습니다.(뿌듯합니다..)   
-> 현재 메인 파일은 **prototype3.py** 파일입니다.
+> 각 역을 노드화(?)해서 NodeList에 넣었어요    
+> 현재 메인 파일은 **prototype3.py** 파일입니다.   
 
 ---
 ## To Do List   
