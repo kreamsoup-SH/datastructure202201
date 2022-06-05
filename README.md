@@ -1,5 +1,5 @@
 # datastructure202201   
-# 메인 레포지토리 변경됨 -> <a href src="https://github.com/machine0617/datastructure202201_CHA">링크</a>
+# 메인 레포지토리 변경됨 -> <a href src="http://github.com/machine0617/datastructure202201_CHA">링크</a>
 
    
 > 현재 메인 파일은 **1_MAP.py, 2_DFS.py** 파일입니다.   
