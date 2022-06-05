@@ -1,5 +1,5 @@
+from numpy import NaN
 import pandas as pd
-
 
 def StationDict(_station, _time):
     return {"station":_station, "time":_time}
@@ -15,13 +15,13 @@ class StationNode:
         print("\"{}({})\"".format(self.name,self.line),end='\t')
         print("prev=[ ",end='')
         for _,prev in enumerate(self.prev):
-            print("({}({})-{}) ".format(prev["station"].name, prev["station"].line, prev["time"]),end='')
+            print("({}({})-{}) ".format(prev["station"].name, prev["station"].line, int(prev["time"])),end='')
         print("], next=[ ",end='')
         for _,next in enumerate(self.next):
-            print("({}({})-{}) ".format(next["station"].name, next["station"].line, next["time"]),end='')
+            print("({}({})-{}) ".format(next["station"].name, next["station"].line, int(next["time"])),end='')
         print("], trsf=[ ",end='')
         for _,trsf in enumerate(self.trsf):
-            print("({}({})-{}) ".format(trsf["station"].name, trsf["station"].line, trsf["time"]),end='')
+            print("({}({})-{}) ".format(trsf["station"].name, trsf["station"].line, int(trsf["time"])),end='')
         print("]")
 
     def append_prev(self,prevstation,time):
@@ -51,7 +51,7 @@ def check_trsf(newnode, searchname):
     for checkline in range(1,5):
         trsffound = search_station(searchname, checkline)
         if trsffound:
-            edge = "3:00"
+            edge = 180
             newnode.append_trsf(trsffound, edge)
             trsffound.append_trsf(newnode, edge)
 
@@ -64,7 +64,7 @@ def getlinelist():
         stationline = row[0]
         stationname = row[1]
         time = row[2]
-        
+
         while len(NodeList)<stationline:
             NodeList.append([])
         
@@ -103,7 +103,7 @@ def getlinelist():
                 
 ############################################################
 # 파일 전처리
-filename = './edges.csv'
+filename = './edges_sec.csv'
 file = pd.read_csv(filename,encoding='UTF-8')
 
 # 맵 생성
@@ -112,7 +112,7 @@ getlinelist()
 ## 2호선 예외항목 -> 뚝섬(2), 성수(2) 연결하기
 DS = search_station("뚝섬",2)
 SS = search_station("성수",2)
-time="1:30"
+time=90
 DS.append_prev(SS,time)
 SS.append_next(DS,time)
 
