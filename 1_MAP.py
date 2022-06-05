@@ -30,14 +30,15 @@ class StationNode:
             print("\"{}({}) : {}\"".format(trsf1.name,trsf1.line, trsf[1]),end='')
         print("]")
 
-def append_next(self):
-    self.next.append([])
-    return len(self.next)-1
+    def append_next(self):
+        self.next.append([])
 
-def append_trsf(self):
-    self.trsf.append([])
-    return len(self.trsf)-1
+    def append_trsf(self):
+        self.trsf.append([])
         
+def stationdict(node, time):
+    return {"station":node, "time":time}
+
 def search_station(searchname, searchline=None):
     # Search specific station in {StationList}
     # while loop on {StationList}, check if {StationList[i].name} is {"name"}

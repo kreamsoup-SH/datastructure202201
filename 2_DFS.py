@@ -30,14 +30,12 @@ class StationNode:
             print("\"{}({}) : {}\"".format(trsf1.name,trsf1.line, trsf[1]),end='')
         print("]")
 
-def append_next(self):
-    self.next.append([])
-    return len(self.next)-1
+    def append_next(self,nextstation):
+        self.next.append([])
 
-def append_trsf(self):
-    self.trsf.append([])
-    return len(self.trsf)-1
-        
+    def append_trsf(self,trsfstation):
+        self.trsf.append([])
+
 def search_station(searchname, searchline=None):
     # Search specific station in {StationList}
     # while loop on {StationList}, check if {StationList[i].name} is {"name"}
@@ -45,21 +43,10 @@ def search_station(searchname, searchline=None):
     if searchline!=None and searchline>0 and searchline<=len(NodeList):
         for _, Stations in enumerate(NodeList):
             for j, station in enumerate(Stations):
-                # station.printnode()
-                # print("searchname{},{}/".format(type(searchname),searchname))
-                # print("stationame{},{}/".format(type(station.name),station.name))
-                # print("searchline{},{}/".format(type(searchline),searchline))
-                # print("stationlin{},{}/".format(type(station.line),station.line))
-                # print(station.name == searchname)
-                # print(station.line == searchline)
                 if (station.name == searchname) and (station.line == searchline):
-                    # print("!!!!!!!!!!")
                     return station
     else:  #찾고자 하는 특정 호선이 존재 안 함.
-        # print("NodeList={}".format(NodeList))
         for i, Stations in enumerate(NodeList):
-            # print("i={}, Stations=  {}".format(i, Stations))
-            # print("search from line#{}".format(i+1))
             for j, station in enumerate(Stations):
                 if station.name == searchname:
                     return station
@@ -71,24 +58,14 @@ def search_station(searchname, searchline=None):
 def getlinelist():
     #Data로 file 사용
     for (idx, row) in (file.iterrows()):
-        time = row[2]
-        stationname = row[1]
         stationline = row[0]
-        # print("rdline:\"{}\"".format(rdline))
-        #print("{}".format(stationname))
-        # print("stations={}".format(stations))
+        stationname = row[1]
+        time = row[2]
         while len(NodeList)<stationline:
             NodeList.append([])
-        # print("stationline=",stationline)
-            # print(NodeList)
         found = search_station(stationname,stationline)
-                # print("i={}".format(i))
-                # if(found!=False):
-                #     print("found={}({})".format(found.name, found.line))
-                # else:
-                #     print("found={}".format(found))
-
-                # 만약 새로운역이면 추가. 이미 존재하는역(현재 라인 내에서 한정)일경우 패스
+        
+        # 만약 새로운역이면 추가. 이미 존재하는역(현재 라인 내에서 한정)일경우 패스
         if found == False:  # new station in current line
             if(stationline != file.iloc[idx-1,0]):       #시작점 (호선이 달라지는 경우)
                 newnode = StationNode(stationname, stationline)
@@ -96,15 +73,13 @@ def getlinelist():
                 trsffound = search_station(stationname)
                 if trsffound != False:
                     edge = 3
-                    i = append_trsf(newnode)
-                    j = append_trsf(trsffound)
+                    newnode.append_trsf()
+                    trsffound.append_trsf()
                     newnode.trsf[i].append(trsffound)
                     trsffound.trsf[j].append(newnode)
                     newnode.trsf[i].append(edge)
                     trsffound.trsf[j].append(edge)
-                    #print(newnode.trsf)
-                    #print(trsffound.trsf)
-           ###################################################
+                ###################################################
                 print(newnode.name, newnode.next, newnode.trsf)
                 NodeList[stationline-1].append(newnode)
 
@@ -121,9 +96,7 @@ def getlinelist():
                         trsffound.trsf[j].append(newnode)
                         newnode.trsf[i].append(edge)
                         trsffound.trsf[j].append(edge)
-                        #print(newnode.trsf)
-                        #print(trsffound.trsf)
-                        ###################################################
+                ###################################################
 
                 prevstation = search_station(file.iloc[idx-1,1],file.iloc[idx-1,0])
                 i = append_next(prevstation)
@@ -134,22 +107,16 @@ def getlinelist():
                 prev = newnode.prev[0]
 
                 NodeList[stationline-1].append(newnode)
-       
-        # print("-------------------------------------------")
-        # for i,NodeLine in enumerate(NodeList):
-        #     for j, Node in enumerate(NodeLine):
-        #         Node.printnode()
-        # print("-------------------------------------------")
-        # input()
+                
 ############################################################
-
+## 뚝섬(2), 성수(2) 연결하기
 
 NodeList = []
 getlinelist()
-#sicheong = search_station("시청",2)
-#chungjeongro = search_station("충정로",2)
-#sicheong.prev.append(chungjeongro)
-#chungjeongro.next.append(sicheong)
+# DS = search_station("뚝섬",2)
+# SS = search_station("성수",2)
+# DS.prev.append(SS)
+# SS.next.append(DS)
 
 
 ############ search_station ############
