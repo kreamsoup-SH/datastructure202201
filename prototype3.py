@@ -91,10 +91,11 @@ def getlinelist():
                         newnode = StationNode(stationname, stationline)
 
                         ##환승역 체크. 다른노선에 동일명의 역이 존재할경우 trsf에 추가##
-                        trsffound = search_station(stationname)
-                        if trsffound != False:
-                            newnode.trsf.append(trsffound)
-                            trsffound.trsf.append(newnode)
+                        for checkline in range(1,5):
+                            trsffound = search_station(stationname,checkline)
+                            if trsffound != False:
+                                newnode.trsf.append(trsffound)
+                                trsffound.trsf.append(newnode)
                         ###################################################
 
                         prevstation = search_station(stations[i-1], stationline)
