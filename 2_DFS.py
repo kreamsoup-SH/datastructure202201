@@ -1,9 +1,8 @@
 import pandas as pd
 
-#파일 전처리(이상한 부분 삭제)
-filename = './edges.csv'
-rawData = pd.read_csv(filename,encoding='UTF-8')
-file =  rawData
+
+def StationDict(_station, _time):
+    return {"station":_station, "time":_time}
 
 class StationNode:
     def __init__(self, name, line):
@@ -14,27 +13,22 @@ class StationNode:
         self.trsf = []
     def printnode(self):
         print("\"{}({})\"".format(self.name,self.line),end='\t')
-        print("prev=[",end='')
-        if len(self.prev)!= 0:
-            prev = self.prev[0]
-            print("\"{}({}) : {}\"".format(prev.name,prev.line, self.prev[1]),end='')
+        print("prev=[ ",end='')
+        for _,prev in enumerate(self.prev):
+            print("{}({}) : {} ".format(prev.station.name, prev.station.line, prev.time),end='')
         print("], next=[",end='')
-        for j in range(len(self.next)):
-            next = self.next[j]
-            next2 = next[0]
-            print("\"{}({}) : {}\"".format(next2.name,next2.line,next[1] ),end='')
+        for _,next in enumerate(self.next):
+            print("{}({}) : {} ".format(next.station.name, next.station.line, next.time),end='')
         print("], trsf=[",end='')
-        for j in range(len(self.trsf)):
-            trsf = self.trsf[j]
-            trsf1 = trsf[0]
-            print("\"{}({}) : {}\"".format(trsf1.name,trsf1.line, trsf[1]),end='')
+        for _,trsf in enumerate(self.trsf):
+            print("{}({}) : {} ".format(trsf.station.name, trsf.station.line, trsf.time),end='')
         print("]")
 
     def append_next(self,nextstation):
-        self.next.append([])
+        self.next.append(nextstation)
 
     def append_trsf(self,trsfstation):
-        self.trsf.append([])
+        self.trsf.append(trsfstation)
 
 def search_station(searchname, searchline=None):
     # Search specific station in {StationList}
@@ -61,8 +55,7 @@ def getlinelist():
         stationline = row[0]
         stationname = row[1]
         time = row[2]
-        while len(NodeList)<stationline:
-            NodeList.append([])
+        
         found = search_station(stationname,stationline)
         
         # 만약 새로운역이면 추가. 이미 존재하는역(현재 라인 내에서 한정)일경우 패스
@@ -98,21 +91,26 @@ def getlinelist():
                         trsffound.trsf[j].append(edge)
                 ###################################################
 
-                prevstation = search_station(file.iloc[idx-1,1],file.iloc[idx-1,0])
-                i = append_next(prevstation)
-                prevstation.next[i].append(newnode)
-                newnode.prev.append(prevstation)
-                prevstation.next[i].append(time)
+                prev = search_station(file.iloc[idx-1,1],file.iloc[idx-1,0])
+                i = append_next(prev)
+                prev.next[i].append(newnode)
+                newnode.prev.append(prev)
+                prev.next[i].append(time)
                 newnode.prev.append(time)
                 prev = newnode.prev[0]
 
                 NodeList[stationline-1].append(newnode)
                 
 ############################################################
-## 뚝섬(2), 성수(2) 연결하기
+# 파일 전처리
+filename = './edges.csv'
+file = pd.read_csv(filename,encoding='UTF-8')
 
+# 맵 생성
 NodeList = []
 getlinelist()
+
+## 뚝섬(2), 성수(2) 연결하기
 # DS = search_station("뚝섬",2)
 # SS = search_station("성수",2)
 # DS.prev.append(SS)
