@@ -1,4 +1,3 @@
-from numpy import NaN
 import pandas as pd
 
 def StationDict(_station, _time):
